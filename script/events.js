@@ -5,7 +5,9 @@ window.Game.Events = [
             return (window.Game.currentTick % 5 === 0);
         },
         trigger: function(){
-            console.log("You meet a stranger");
+            document.getElementById('log').innerHTML += 
+                "You meet a stranger\n";
+                
         }
     }
 ]

@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="utf-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -9,25 +10,40 @@
 </head>
 
 <body>
-    <div id="tickCounter"></div>
 
-    <div>
-        <p>Resources</p>
-        <div id="resources">
-            <p>wood</p>
-            <p id="wood"></div>
+
+    <!-- game -->
+    <div id="gameContainer">
+        <div id="logContainer">
+            <textarea id="log" disabled='readonly'></textarea>
         </div>
-        
-    </div>
 
-    <div id="actionButtons">
-        <button id="gatherWood" class="button" onclick="window.Game.gatherWood()">Gather wood</div>
-    </div>
+        <div id="resourceContainer">
+            <p>Resources</p>
+            <div id="resources">
+                <p>wood</p>
+                <div id="wood"></div>
+            </div>
+
+        </div>
+
+        <div id="actionButtons">
+            <button id="gatherWood" class="button" onclick="window.Game.gatherWood()">Gather wood
+        </div>
 
 
 
-    <script src=".\script\engine.js"></script>
-    <script src=".\script\events.js"></script>
+        <!-- debug area -->
+        <div id="debugContainer">
+                <p>Current tick: </p>
+                <div id="tickCounter">0</div>
+                <button onclick="window.Game.pause()">Pause</button>
+        </div>
+
+
+        <script src=".\script\engine.js"></script>
+        <script src=".\script\events.js"></script>
 
 </body>
+
 </html>

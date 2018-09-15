@@ -9,3 +9,26 @@ p {
     padding-right: 3px;
     margin: 0;
 }
+
+#log {
+    border: none;
+    resize: none;
+    width: 200px;
+    height: 400px;
+    background-color: white;
+    overflow: hidden;
+}
+
+#gameContainer {
+    display: flex;
+}
+
+body, textarea, p, div, button {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+}
+
+#debugContainer {
+    display: flex;
+    align-items: flex-end;
+}

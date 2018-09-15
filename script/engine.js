@@ -5,11 +5,14 @@ window.Game.startDateTime = new Date().toString();
 window.Game.running = true;
 window.Game.resources = {};
 window.Game.resources.wood = 0;
+window.Game.log = "";
 
-window.Game.Update = function() {
-    window.Game.updateTickCounter();
-    window.Game.updateResources();
-    window.Game.eventCheck();
+window.Game.Update = function () {
+    if (window.Game.running) {
+        window.Game.updateTickCounter();
+        window.Game.updateResources();
+        window.Game.eventCheck();
+    }
 }
 
 
@@ -17,9 +20,9 @@ window.Game.Update = function() {
  * Checks for and triggers an available event
  *
  */
-window.Game.eventCheck = function(){
+window.Game.eventCheck = function () {
     window.Game.Events.forEach(event => {
-        if(event.isAvailable()){
+        if (event.isAvailable()) {
             event.trigger();
         }
     });
@@ -27,12 +30,11 @@ window.Game.eventCheck = function(){
 
 /**
  * Increases the game counter and displays the value in the UI
- *
+ * Debug method
  */
-window.Game.updateTickCounter = function() {
+window.Game.updateTickCounter = function () {
     window.Game.currentTick += 1;
     document.getElementById('tickCounter').innerHTML = window.Game.currentTick;
-    console.log(window.Game.currentTick);
 }
 
 
@@ -40,17 +42,21 @@ window.Game.updateTickCounter = function() {
  * Updates the resource count in the UI
  *
  */
-window.Game.updateResources = function(){
+window.Game.updateResources = function () {
     document.getElementById('wood').innerHTML = window.Game.resources.wood;
 }
 
-window.Game.gatherWood = function(){
+window.Game.gatherWood = function () {
     window.Game.resources.wood += 1;
     window.Game.updateResources();
 }
 
-window.Game.MainLoop = function() {
+window.Game.MainLoop = function () {
     setInterval(window.Game.Update, window.Game.tickSpeed);
+}
+
+window.Game.pause = function() {
+    window.Game.running = !window.Game.running;
 }
 
 window.Game.MainLoop();
