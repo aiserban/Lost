@@ -6,7 +6,27 @@ window.Game.running = true;
 window.Game.resources = {};
 window.Game.resources.wood = 0;
 window.Game.log = "";
+window.Game.lastEventId = -1;
+window.Game.lastEventTick = 0;
+window.Game.inventory = {
+    "hatchet": true
+}
 
+
+
+/**
+ * Main game loop. This is where the game starts
+ *
+ */
+window.Game.MainLoop = function () {
+    setInterval(window.Game.Update, window.Game.tickSpeed);
+}
+
+
+/**
+ * Function takes care of all events, actions and checks that need to be completed in each tick
+ *
+ */
 window.Game.Update = function () {
     if (window.Game.running) {
         window.Game.updateTickCounter();
@@ -17,16 +37,64 @@ window.Game.Update = function () {
 
 
 /**
- * Checks for and triggers an available event
+ * Pauses or starts the game, based on the current state
+ *
+ */
+window.Game.pause = function () {
+    window.Game.running = !window.Game.running;
+}
+
+
+/**
+ * Generates a random integer
+ *
+ * @param {int} min
+ * @param {int} max
+ * @param {int []} exclude
+ * @returns {int}
+ */
+window.Game.randomInt = function (min, max, exclude) {
+    var result = min - 1;
+    var exclusions = new Array();
+
+    if (exclude === null || exclude === undefined){
+        exclusions.push(min - 1);
+    } else if (typeof(exclude) === Number){
+        exclusions.push(exclude);
+    } else {
+        exclusions = exclusions.concat(exclude);
+    }
+    
+    while (exclusions.includes(result)) {
+        result = Math.floor(Math.random() * max + (min || 0));
+    }
+
+    return result;
+}
+
+/**
+ * Checks for and triggers an available event. Only one event can be triggered per tick.
  *
  */
 window.Game.eventCheck = function () {
-    window.Game.Events.forEach(event => {
-        if (event.isAvailable()) {
-            event.trigger();
+    var excludedIds = new Array()
+    excludedIds.push(0, window.Game.lastEventId);
+    
+    for (i = 0; i < window.Game.Events.length; i++){
+        var rand = window.Game.randomInt(1, window.Game.Events.length, excludedIds);
+        var event = window.Game.Events.filter(obj => {
+            if (obj.id === rand) {
+                return obj;
+            }
+        });
+        if (event[0] !== 0 && event[0].isAvailable()){
+            event[0].trigger();
+            break;
         }
-    });
+    }
 }
+
+
 
 /**
  * Increases the game counter and displays the value in the UI
@@ -46,17 +114,34 @@ window.Game.updateResources = function () {
     document.getElementById('wood').innerHTML = window.Game.resources.wood;
 }
 
+
+/**
+ * Displays a message in the log event
+ *
+ * @param {string} message
+ */
+window.Game.logEvent = function(message) {
+    document.getElementById('log').innerHTML = message + "\n" + document.getElementById('log').innerHTML;
+}
+
+
+/**
+ * Gather wood. Results are based on whether or not a proper weapon is equiped and random chance.
+ *
+ */
 window.Game.gatherWood = function () {
-    window.Game.resources.wood += 1;
+    var woodGathered = 0;
+    if (window.Game.inventory.hatchet === true){
+        woodGathered = window.Game.randomInt(3, 8);
+    }
+    else {
+        woodGathered = window.Game.randomInt(0, 4);
+    }
+
+    window.Game.resources.wood += woodGathered;
     window.Game.updateResources();
+    window.Game.logEvent("You manage to gather " + woodGathered + " wood");
 }
 
-window.Game.MainLoop = function () {
-    setInterval(window.Game.Update, window.Game.tickSpeed);
-}
-
-window.Game.pause = function() {
-    window.Game.running = !window.Game.running;
-}
 
 window.Game.MainLoop();
