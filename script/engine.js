@@ -26,7 +26,14 @@ window.Game.inventory = [
         "description": "Your trusty knife. Great at skinning and cutting everything wildlife"
     }
 ];
-
+window.Game.player = {};
+window.Game.player.health = 100;
+window.Game.player.thirst = 100;
+window.Game.player.hunger = 100;
+window.Game.player.comfort = 100;
+window.Game.player.sleep = 100;
+window.Game.decaySpeed = 10;
+window.Game.lastTickStatDecay = 0;
 
 /**
  * Main game loop. This is where the game starts
@@ -34,7 +41,6 @@ window.Game.inventory = [
 window.Game.MainLoop = function () {
     setInterval(window.Game.Update, window.Game.tickSpeed);
 };
-
 
 /**
  * Function takes care of all events, actions and checks that need to be completed in each tick
@@ -45,9 +51,9 @@ window.Game.Update = function () {
         window.Game.updateResources();
         window.Game.eventCheck();
         window.Game.updateInventory();
+        window.Game.decayStats();
     }
 };
-
 
 /**
  * Pauses or starts the game, based on the current state
@@ -56,7 +62,6 @@ window.Game.Update = function () {
 window.Game.pause = function () {
     window.Game.running = !window.Game.running;
 };
-
 
 /**
  * Returns a random integer between min and max, inclusive
@@ -117,7 +122,6 @@ window.Game.updateTickCounter = function () {
     document.getElementById('tickCounter').innerHTML = window.Game.currentTick;
 };
 
-
 /**
  * Updates the resource count in the UI
  */
@@ -140,6 +144,19 @@ window.Game.updateInventory = function (){
 
         document.getElementById('inventory').innerHTML = inv;
         window.Game.inventoryChanged = false;
+    }
+};
+
+window.Game.decayStats = function() {
+    if (window.Game.currentTick === (window.Game.lastTickStatDecay + window.Game.decaySpeed)){
+        window.Game.player.hunger -= 1;
+        window.Game.player.thirst -= 1;
+        window.Game.player.sleep -= 1;
+        window.Game.lastTickStatDecay = window.Game.currentTick;
+
+        window.Game.logEvent("You are getting thirsty: " + window.Game.player.thirst);
+        window.Game.logEvent("You are getting hungry: " + window.Game.player.hunger);
+        window.Game.logEvent("You are getting tired: " + window.Game.player.sleep);
     }
 };
 
@@ -166,13 +183,13 @@ window.Game.logEvent = function (message) {
     document.getElementById('log').innerHTML = message + "\n" + document.getElementById('log').innerHTML;
 };
 
-
 /**
  * Gather wood. Results are based on whether or not a proper tool is equipped and random chance.
  */
 window.Game.gatherWood = function () {
     let woodGathered = 0;
-    if (window.Game.itemAvailable("Hatchet")) {
+    if (window.Game.itemAvailable("Hatchet" +
+        "")) {
         woodGathered = window.Game.randomInt(3, 8);
     }
     else {
