@@ -10,8 +10,7 @@ window.Game.lastEventId = -1;
 window.Game.lastEventTick = 0;
 window.Game.inventory = {
     "hatchet": true
-}
-
+};
 
 
 /**
@@ -20,7 +19,7 @@ window.Game.inventory = {
  */
 window.Game.MainLoop = function () {
     setInterval(window.Game.Update, window.Game.tickSpeed);
-}
+};
 
 
 /**
@@ -33,7 +32,7 @@ window.Game.Update = function () {
         window.Game.updateResources();
         window.Game.eventCheck();
     }
-}
+};
 
 
 /**
@@ -42,7 +41,7 @@ window.Game.Update = function () {
  */
 window.Game.pause = function () {
     window.Game.running = !window.Game.running;
-}
+};
 
 
 /**
@@ -54,46 +53,45 @@ window.Game.pause = function () {
  * @returns {int}
  */
 window.Game.randomInt = function (min, max, exclude) {
-    var result = min - 1;
-    var exclusions = new Array();
+    let result = min - 1;
+    let exclusions = [];
 
-    if (exclude === null || exclude === undefined){
+    if (exclude === null || exclude === undefined) {
         exclusions.push(min - 1);
-    } else if (typeof(exclude) === Number){
+    } else if (typeof(exclude) === Number) {
         exclusions.push(exclude);
     } else {
         exclusions = exclusions.concat(exclude);
     }
-    
+
     while (exclusions.includes(result)) {
         result = Math.floor(Math.random() * max + (min || 0));
     }
 
     return result;
-}
+};
 
 /**
  * Checks for and triggers an available event. Only one event can be triggered per tick.
  *
  */
 window.Game.eventCheck = function () {
-    var excludedIds = new Array()
+    let excludedIds = [];
     excludedIds.push(0, window.Game.lastEventId);
-    
-    for (i = 0; i < window.Game.Events.length; i++){
-        var rand = window.Game.randomInt(1, window.Game.Events.length, excludedIds);
-        var event = window.Game.Events.filter(obj => {
+
+    for (let i = 0; i < window.Game.Events.length; i++) {
+        let rand = window.Game.randomInt(1, window.Game.Events.length, excludedIds);
+        let event = window.Game.Events.filter(obj => {
             if (obj.id === rand) {
                 return obj;
             }
         });
-        if (event[0] !== 0 && event[0].isAvailable()){
+        if (event[0] !== 0 && event[0].isAvailable()) {
             event[0].trigger();
             break;
         }
     }
-}
-
+};
 
 
 /**
@@ -103,7 +101,7 @@ window.Game.eventCheck = function () {
 window.Game.updateTickCounter = function () {
     window.Game.currentTick += 1;
     document.getElementById('tickCounter').innerHTML = window.Game.currentTick;
-}
+};
 
 
 /**
@@ -112,7 +110,7 @@ window.Game.updateTickCounter = function () {
  */
 window.Game.updateResources = function () {
     document.getElementById('wood').innerHTML = window.Game.resources.wood;
-}
+};
 
 
 /**
@@ -120,18 +118,18 @@ window.Game.updateResources = function () {
  *
  * @param {string} message
  */
-window.Game.logEvent = function(message) {
+window.Game.logEvent = function (message) {
     document.getElementById('log').innerHTML = message + "\n" + document.getElementById('log').innerHTML;
-}
+};
 
 
 /**
- * Gather wood. Results are based on whether or not a proper weapon is equiped and random chance.
+ * Gather wood. Results are based on whether or not a proper weapon is equipped and random chance.
  *
  */
 window.Game.gatherWood = function () {
-    var woodGathered = 0;
-    if (window.Game.inventory.hatchet === true){
+    let woodGathered = 0;
+    if (window.Game.inventory.hatchet === true) {
         woodGathered = window.Game.randomInt(3, 8);
     }
     else {
@@ -141,7 +139,7 @@ window.Game.gatherWood = function () {
     window.Game.resources.wood += woodGathered;
     window.Game.updateResources();
     window.Game.logEvent("You manage to gather " + woodGathered + " wood");
-}
+};
 
 
 window.Game.MainLoop();
