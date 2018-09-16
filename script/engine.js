@@ -143,6 +143,20 @@ window.Game.updateInventory = function (){
     }
 };
 
+/**
+ * Checks if the player has the item with that name in the inventory
+ * @param name
+ * @returns {boolean}
+ */
+window.Game.itemAvailable = function(name){
+    let hasItem = false;
+    if (window.Game.inventory.find(item => {
+        return (item.name === name && item.isAvailable);
+    })) {
+        hasItem = true;
+    }
+    return hasItem;
+};
 
 /**
  * Displays a message to the game log
@@ -158,11 +172,7 @@ window.Game.logEvent = function (message) {
  */
 window.Game.gatherWood = function () {
     let woodGathered = 0;
-    if (window.Game.inventory.find(item => {
-        if (item.name === "Hatchet") {
-            return item;
-        }
-    }).isAvailable === true) {
+    if (window.Game.itemAvailable("Hatchet")) {
         woodGathered = window.Game.randomInt(3, 8);
     }
     else {
@@ -174,5 +184,7 @@ window.Game.gatherWood = function () {
     window.Game.logEvent("You manage to gather " + woodGathered + " wood");
 };
 
-
+/**
+ * Run the game!
+ */
 window.Game.MainLoop();
