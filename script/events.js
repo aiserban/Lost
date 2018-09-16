@@ -6,7 +6,7 @@ window.Game.Events = [
             return (window.Game.currentTick % 5 === 0) && window.Game.lastEventId !== this.id;
         },
         trigger: function(){
-            window.Game.logEvent("A stranger appears, wrapped in a dark robe.\nYou cannot see his face, but you know he's looking at you.")
+            window.Game.logEvent("A stranger appears, wrapped in a dark robe.\nYou cannot see his face, but you know he's looking at you.");
             window.Game.lastEventId = this.id;
         }
     },
@@ -17,7 +17,7 @@ window.Game.Events = [
             return (window.Game.currentTick % 5 === 0) && window.Game.lastEventId !== this.id;
         },
         trigger: function(){
-            window.Game.logEvent("You spot a wild hog between the trees.")
+            window.Game.logEvent("You spot a wild hog between the trees.");
             window.Game.lastEventId = this.id;
         }
     },
@@ -28,8 +28,8 @@ window.Game.Events = [
             return (window.Game.currentTick % 5 === 0) && window.Game.lastEventId !== this.id;
         },
         trigger: function(){
-            window.Game.logEvent("The trees move.")
+            window.Game.logEvent("The trees move.");
             window.Game.lastEventId = this.id;
         }
     }
-]
+];
