@@ -72,7 +72,7 @@ window.Game.randomInt = function (min, max, exclude) {
 
     if (exclude === null || exclude === undefined) {
         exclusions.push(min - 1);
-    } else if (typeof(exclude) === Number) {
+    } else if (typeof(exclude) === "number") {
         exclusions.push(exclude);
     } else {
         exclusions = exclusions.concat(exclude);
@@ -158,7 +158,11 @@ window.Game.logEvent = function (message) {
  */
 window.Game.gatherWood = function () {
     let woodGathered = 0;
-    if (window.Game.inventory.hatchet === true) {
+    if (window.Game.inventory.find(item => {
+        if (item.name === "Hatchet") {
+            return item;
+        }
+    }).isAvailable === true) {
         woodGathered = window.Game.randomInt(3, 8);
     }
     else {
