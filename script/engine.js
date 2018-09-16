@@ -8,9 +8,24 @@ window.Game.resources.wood = 0;
 window.Game.log = "";
 window.Game.lastEventId = -1;
 window.Game.lastEventTick = 0;
-window.Game.inventory = {
-    "hatchet": true
-};
+window.Game.inventoryChanged = true;
+window.Game.inventory = [
+    {
+        "name": "Hatchet",
+        "isAvailable": true,
+        "description": "Just a plain old hatchet"
+    },
+    {
+        "name": "Canteen",
+        "isAvailable": false,
+        "description": "Used for storing water. Capacity: 2 liters"
+    },
+    {
+        "name": "Hunting knife",
+        "isAvailable": true,
+        "description": "Your trusty knife. Great at skinning and cutting everything wildlife"
+    }
+];
 
 
 /**
@@ -29,6 +44,7 @@ window.Game.Update = function () {
         window.Game.updateTickCounter();
         window.Game.updateResources();
         window.Game.eventCheck();
+        window.Game.updateInventory();
     }
 };
 
@@ -109,9 +125,27 @@ window.Game.updateResources = function () {
     document.getElementById('wood').innerHTML = window.Game.resources.wood;
 };
 
+/**
+ * Update the player's inventory if required.
+ * Uses the inventoryChanged variable to decide whether or not it needs to run
+ */
+window.Game.updateInventory = function (){
+    if (window.Game.inventoryChanged === true) {
+        let inv = '';
+        for (let i = 0; i < window.Game.inventory.length; i++) {
+            if (window.Game.inventory[i].isAvailable) {
+                inv += window.Game.inventory[i].name + "\n";
+            }
+        }
+
+        document.getElementById('inventory').innerHTML = inv;
+        window.Game.inventoryChanged = false;
+    }
+};
+
 
 /**
- * Displays a essage to the game log
+ * Displays a message to the game log
  * @param message
  */
 window.Game.logEvent = function (message) {
