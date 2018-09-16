@@ -15,7 +15,6 @@ window.Game.inventory = {
 
 /**
  * Main game loop. This is where the game starts
- *
  */
 window.Game.MainLoop = function () {
     setInterval(window.Game.Update, window.Game.tickSpeed);
@@ -24,7 +23,6 @@ window.Game.MainLoop = function () {
 
 /**
  * Function takes care of all events, actions and checks that need to be completed in each tick
- *
  */
 window.Game.Update = function () {
     if (window.Game.running) {
@@ -37,7 +35,7 @@ window.Game.Update = function () {
 
 /**
  * Pauses or starts the game, based on the current state
- *
+ * Debug method
  */
 window.Game.pause = function () {
     window.Game.running = !window.Game.running;
@@ -45,12 +43,12 @@ window.Game.pause = function () {
 
 
 /**
- * Generates a random integer
- *
- * @param {int} min
- * @param {int} max
- * @param {int []} exclude
- * @returns {int}
+ * Returns a random integer between min and max, inclusive
+ * Allows for exclusions by passing an array with numbers to exclude
+ * @param min
+ * @param max
+ * @param exclude
+ * @returns {number}
  */
 window.Game.randomInt = function (min, max, exclude) {
     let result = min - 1;
@@ -72,8 +70,8 @@ window.Game.randomInt = function (min, max, exclude) {
 };
 
 /**
- * Checks for and triggers an available event. Only one event can be triggered per tick.
- *
+ * Checks for and triggers an available event.
+ * Only one event can be triggered per tick.
  */
 window.Game.eventCheck = function () {
     let excludedIds = [];
@@ -106,7 +104,6 @@ window.Game.updateTickCounter = function () {
 
 /**
  * Updates the resource count in the UI
- *
  */
 window.Game.updateResources = function () {
     document.getElementById('wood').innerHTML = window.Game.resources.wood;
@@ -114,9 +111,8 @@ window.Game.updateResources = function () {
 
 
 /**
- * Displays a message in the log event
- *
- * @param {string} message
+ * Displays a essage to the game log
+ * @param message
  */
 window.Game.logEvent = function (message) {
     document.getElementById('log').innerHTML = message + "\n" + document.getElementById('log').innerHTML;
@@ -124,8 +120,7 @@ window.Game.logEvent = function (message) {
 
 
 /**
- * Gather wood. Results are based on whether or not a proper weapon is equipped and random chance.
- *
+ * Gather wood. Results are based on whether or not a proper tool is equipped and random chance.
  */
 window.Game.gatherWood = function () {
     let woodGathered = 0;
