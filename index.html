@@ -2,21 +2,32 @@
 <html>
 
 <head>
-    <meta charset="utf-8" />
+    <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Lost</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+    <link rel="stylesheet" type="text/css" media="screen" href="style.css"/>
 </head>
 
 <body>
 
 
-    <!-- game -->
-    <div id="gameContainer">
-        <div id="logContainer">
-            <textarea id="log" disabled="disabled"></textarea>
-        </div>
+<!-- game -->
+<div id="gameContainer">
+    <div id="logContainer">
+        <textarea id="log" disabled="disabled"></textarea>
+    </div>
+
+    <div id="statsContainer">
+        <div>H<div id="hunger"></div></div>
+        <div>T<div id="thirst"></div></div>
+        <div>S<div id="sleep"></div></div>
+    </div>
+    <!-- debug area -->
+    <div id="debugContainer">
+        <div>Tick:</div>
+        <div id="tickCounter">0</div>
+        <button onclick="window.Game.pause()">Pause</button>
 
         <div id="resourceContainer">
             <div>Resources</div>
@@ -28,24 +39,18 @@
         </div>
 
         <div id="actionButtons">
-            <button id="gatherWood" class="button" onclick="window.Game.gatherWood()">Gather wood
+            <button id="gatherWood" class="button" onclick="window.Game.gatherWood()">Gather wood</button>
         </div>
 
         <div id="inventoryContainer">
             <div>Inventory</div>
             <div id="inventory"></div>
         </div>
-
-        <!-- debug area -->
-        <div id="debugContainer">
-                <div>Tick: </div>
-                <div id="tickCounter">0</div>
-                <button onclick="window.Game.pause()">Pause</button>
-        </div>
+    </div>
 
 
-        <script src=".\script\engine.js"></script>
-        <script src=".\script\events.js"></script>
+    <script src=".\script\engine.js"></script>
+    <script src=".\script\events.js"></script>
 
 </body>
 

@@ -27,12 +27,21 @@ window.Game.inventory = [
     }
 ];
 window.Game.player = {};
-window.Game.player.health = 100;
-window.Game.player.thirst = 100;
-window.Game.player.hunger = 100;
-window.Game.player.comfort = 100;
-window.Game.player.sleep = 100;
-window.Game.decaySpeed = 10;
+window.Game.player.stats = [
+    {
+        'name': 'hunger',
+        'value': 100
+    },
+    {
+        'name': 'thirst',
+        'value': 100
+    },
+    {
+        'name': 'sleep',
+        'value': 100
+    }
+];
+window.Game.decaySpeed = 5; // stats decay by 1 each {value} ticks
 window.Game.lastTickStatDecay = 0;
 
 /**
@@ -48,8 +57,9 @@ window.Game.MainLoop = function () {
 window.Game.Update = function () {
     if (window.Game.running) {
         window.Game.updateTickCounter();
-        window.Game.updateResources();
         window.Game.eventCheck();
+        window.Game.updateResources();
+        window.Game.updateStats();
         window.Game.updateInventory();
         window.Game.decayStats();
     }
@@ -130,10 +140,10 @@ window.Game.updateResources = function () {
 };
 
 /**
- * Update the player's inventory if required.
+ * Update the player's inventory.
  * Uses the inventoryChanged variable to decide whether or not it needs to run
  */
-window.Game.updateInventory = function (){
+window.Game.updateInventory = function () {
     if (window.Game.inventoryChanged === true) {
         let inv = '';
         for (let i = 0; i < window.Game.inventory.length; i++) {
@@ -147,16 +157,77 @@ window.Game.updateInventory = function (){
     }
 };
 
-window.Game.decayStats = function() {
-    if (window.Game.currentTick === (window.Game.lastTickStatDecay + window.Game.decaySpeed)){
-        window.Game.player.hunger -= 1;
-        window.Game.player.thirst -= 1;
-        window.Game.player.sleep -= 1;
+/**
+ * Decays all stats by 1. Existing is a great burden
+ */
+window.Game.decayStats = function () {
+    if (window.Game.currentTick === (window.Game.lastTickStatDecay + window.Game.decaySpeed)) {
+        for (let i = 0; i < window.Game.player.stats.length; i++) {
+            window.Game.player.stats[i].value -= 1;
+        }
         window.Game.lastTickStatDecay = window.Game.currentTick;
+        window.Game.updateStats();
+    }
+};
 
-        window.Game.logEvent("You are getting thirsty: " + window.Game.player.thirst);
-        window.Game.logEvent("You are getting hungry: " + window.Game.player.hunger);
-        window.Game.logEvent("You are getting tired: " + window.Game.player.sleep);
+/**
+ * Update the stats in the UI
+ */
+window.Game.updateStats = function () {
+    let hungerBar = document.getElementById('hunger');
+    let thirstBar = document.getElementById('thirst');
+    let sleepBar = document.getElementById('sleep');
+
+    let playerHunger = window.Game.player.stats.find(stat => {
+        return stat.name === 'hunger'
+    }).value;
+    let playerThirst = window.Game.player.stats.find(stat => {
+        return stat.name === 'thirst'
+    }).value;
+    let playerSleep = window.Game.player.stats.find(stat => {
+        return stat.name === 'sleep'
+    }).value;
+
+    if (playerHunger> 80) {
+        hungerBar.innerHTML = '[+++++]';
+    } else if (playerHunger > 60) {
+        hungerBar.innerHTML = '[++++-]';
+    } else if (playerHunger > 40) {
+        hungerBar.innerHTML = '[+++--]';
+    } else if (playerHunger > 20) {
+        hungerBar.innerHTML = '[++---]';
+    } else if (playerHunger > 0) {
+        hungerBar.innerHTML = '[+----]';
+    } else {
+        hungerBar.innerHTML = '[-----]';
+    }
+
+    if (playerThirst> 80) {
+        thirstBar.innerHTML = '[+++++]';
+    } else if (playerThirst > 60) {
+        thirstBar.innerHTML = '[++++-]';
+    } else if (playerThirst > 40) {
+        thirstBar.innerHTML = '[+++--]';
+    } else if (playerThirst > 20) {
+        thirstBar.innerHTML = '[++---]';
+    } else if (playerThirst > 0) {
+        thirstBar.innerHTML = '[+----]';
+    } else {
+        thirstBar.innerHTML = '[-----]';
+    }
+
+    if (playerSleep> 80) {
+        sleepBar.innerHTML = '[+++++]';
+    } else if (playerSleep > 60) {
+        sleepBar.innerHTML = '[++++-]';
+    } else if (playerSleep > 40) {
+        sleepBar.innerHTML = '[+++--]';
+    } else if (playerSleep > 20) {
+        sleepBar.innerHTML = '[++---]';
+    } else if (playerSleep > 0) {
+        sleepBar.innerHTML = '[+----]';
+    } else {
+        sleepBar.innerHTML = '[-----]';
     }
 };
 
@@ -165,7 +236,7 @@ window.Game.decayStats = function() {
  * @param name
  * @returns {boolean}
  */
-window.Game.itemAvailable = function(name){
+window.Game.itemAvailable = function (name) {
     let hasItem = false;
     if (window.Game.inventory.find(item => {
         return (item.name === name && item.isAvailable);

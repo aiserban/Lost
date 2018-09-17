@@ -32,3 +32,12 @@ body, textarea, p, div, button {
     display: flex;
     align-items: flex-end;
 }
+
+#statsContainer {
+    padding-left: 40px;
+}
+
+#statsContainer div {
+    display: flex;
+    padding-left: 5px;
+}
