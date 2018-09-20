@@ -323,7 +323,9 @@ window.Game.forage = function () {
 };
 
 window.Game.hunt = function(){
-    let hungerCost, sleepCost, thirstCost = 5;
+    let hungerCost = 5;
+    let sleepCost = 5;
+    let thirstCost = 5;
     let meatGathered = 0;
     let skinGathered = 0;
     let furGathered = 0;
