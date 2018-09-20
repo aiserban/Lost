@@ -18,11 +18,16 @@
         <textarea id="log" disabled="disabled"></textarea>
     </div>
 
+    <div id="actionButtons">
+        <button id="gatherWood" class="button" onclick="window.Game.gatherWood()">Gather wood</button>
+    </div>
+
     <div id="statsContainer">
         <div>H<div id="hunger"></div></div>
         <div>T<div id="thirst"></div></div>
         <div>S<div id="sleep"></div></div>
     </div>
+
     <!-- debug area -->
     <div id="debugContainer">
         <div>Tick:</div>
@@ -36,10 +41,6 @@
                 <div id="wood"></div>
             </div>
 
-        </div>
-
-        <div id="actionButtons">
-            <button id="gatherWood" class="button" onclick="window.Game.gatherWood()">Gather wood</button>
         </div>
 
         <div id="inventoryContainer">

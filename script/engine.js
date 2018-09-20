@@ -3,13 +3,12 @@ window.Game.currentTick = 0;
 window.Game.tickSpeed = 500;  // tick speed in milliseconds
 window.Game.startDateTime = new Date().toString();
 window.Game.running = true;
-window.Game.resources = {};
-window.Game.resources.wood = 0;
 window.Game.log = "";
 window.Game.lastEventId = -1;
 window.Game.lastEventTick = 0;
 window.Game.inventoryChanged = true;
-window.Game.inventory = [
+window.Game.player = {};
+window.Game.player.inventory = [
     {
         "name": "Hatchet",
         "isAvailable": true,
@@ -26,7 +25,10 @@ window.Game.inventory = [
         "description": "Your trusty knife. Great at skinning and cutting everything wildlife"
     }
 ];
-window.Game.player = {};
+window.Game.player.resources = {};
+window.Game.player.resources.wood = 0;
+window.Game.player.resources.bunchOfLeaves = 0;
+window.Game.player.resources.sticks = 0;
 window.Game.player.stats = [
     {
         'name': 'hunger',
@@ -136,7 +138,7 @@ window.Game.updateTickCounter = function () {
  * Updates the resource count in the UI
  */
 window.Game.updateResources = function () {
-    document.getElementById('wood').innerHTML = window.Game.resources.wood;
+    document.getElementById('wood').innerHTML = window.Game.player.resources.wood;
 };
 
 /**
@@ -146,9 +148,9 @@ window.Game.updateResources = function () {
 window.Game.updateInventory = function () {
     if (window.Game.inventoryChanged === true) {
         let inv = '';
-        for (let i = 0; i < window.Game.inventory.length; i++) {
-            if (window.Game.inventory[i].isAvailable) {
-                inv += window.Game.inventory[i].name + "\n";
+        for (let i = 0; i < window.Game.player.inventory.length; i++) {
+            if (window.Game.player.inventory[i].isAvailable) {
+                inv += window.Game.player.inventory[i].name + "\n";
             }
         }
 
@@ -238,7 +240,7 @@ window.Game.updateStats = function () {
  */
 window.Game.itemAvailable = function (name) {
     let hasItem = false;
-    if (window.Game.inventory.find(item => {
+    if (window.Game.player.inventory.find(item => {
         return (item.name === name && item.isAvailable);
     })) {
         hasItem = true;
@@ -259,17 +261,28 @@ window.Game.logEvent = function (message) {
  */
 window.Game.gatherWood = function () {
     let woodGathered = 0;
-    if (window.Game.itemAvailable("Hatchet" +
-        "")) {
-        woodGathered = window.Game.randomInt(3, 8);
+    let sticksGathered = 0;
+    let bunchesOfLeavesGathered = 0;
+    let boostItem = "Hatchet";
+    let boostMultiplier = 2;
+    let minWoodWithoutMultiplier = 1;
+    let maxWoodWithoutMultiplier = 5;
+
+    if (window.Game.itemAvailable(boostItem)) {
+        woodGathered = window.Game.randomInt(minWoodWithoutMultiplier * boostMultiplier, maxWoodWithoutMultiplier * boostMultiplier);
     }
     else {
-        woodGathered = window.Game.randomInt(0, 4);
+        woodGathered = window.Game.randomInt(minWoodWithoutMultiplier, maxWoodWithoutMultiplier);
     }
 
-    window.Game.resources.wood += woodGathered;
+    sticksGathered = window.Game.randomInt(5, 15);
+    bunchesOfLeavesGathered = window.Game.randomInt(1, 2);
+
+    window.Game.player.resources.wood += woodGathered;
+    window.Game.player.resources.sticks += sticksGathered;
+    window.Game.player.resources.bunchOfLeaves += bunchesOfLeavesGathered;
     window.Game.updateResources();
-    window.Game.logEvent("You manage to gather " + woodGathered + " wood");
+    window.Game.logEvent("You manage to gather " + woodGathered + " wood, " + sticksGathered + " sticks and " + bunchesOfLeavesGathered + " bunch of leaves.");
 };
 
 /**
