@@ -294,7 +294,9 @@ window.Game.gatherWood = function () {
     window.Game.player.stats.find(obj => {return obj.name === "Hunger"}).value -= hungerCost;
     window.Game.player.stats.find(obj => {return obj.name === "Thirst"}).value -= thirstCost;
     window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
+
     window.Game.updateResources();
+    window.Game.updateStats();
     window.Game.logEvent("You manage to gather " + woodGathered + " wood, " + sticksGathered + " sticks and " + bunchesOfLeavesGathered + " bunch of leaves.");
 };
 
@@ -319,6 +321,7 @@ window.Game.forage = function () {
     window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
 
     window.Game.updateResources();
+    window.Game.updateStats();
     window.Game.logEvent("You manage to forage " + berriesGathered + " berries, " + applesGathered + " apples and " + mushroomsGathered + " mushrooms.");
 };
 
@@ -342,6 +345,8 @@ window.Game.hunt = function(){
     window.Game.player.stats.find(obj => {return obj.name === "Thirst"}).value -= thirstCost;
     window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
 
+    window.Game.updateResources();
+    window.Game.updateStats();
     window.Game.logEvent("You manage to get " + meatGathered + " meat, " + furGathered + " fur and " + skinGathered + " skins");
 };
 
