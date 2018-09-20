@@ -31,15 +31,15 @@ window.Game.player.resources.bunchOfLeaves = 0;
 window.Game.player.resources.sticks = 0;
 window.Game.player.stats = [
     {
-        'name': 'hunger',
+        'name': 'Hunger',
         'value': 100
     },
     {
-        'name': 'thirst',
+        'name': 'Thirst',
         'value': 100
     },
     {
-        'name': 'sleep',
+        'name': 'Sleep',
         'value': 100
     }
 ];
@@ -181,13 +181,13 @@ window.Game.updateStats = function () {
     let sleepBar = document.getElementById('sleep');
 
     let playerHunger = window.Game.player.stats.find(stat => {
-        return stat.name === 'hunger'
+        return stat.name === 'Hunger'
     }).value;
     let playerThirst = window.Game.player.stats.find(stat => {
-        return stat.name === 'thirst'
+        return stat.name === 'Thirst'
     }).value;
     let playerSleep = window.Game.player.stats.find(stat => {
-        return stat.name === 'sleep'
+        return stat.name === 'Sleep'
     }).value;
 
     if (playerHunger> 80) {
@@ -257,7 +257,8 @@ window.Game.logEvent = function (message) {
 };
 
 /**
- * Gather wood. Results are based on whether or not a proper tool is equipped and random chance.
+ * Gather wood, sticks and leaves.
+ * Results are based on whether or not a proper tool is equipped and random chance.
  */
 window.Game.gatherWood = function () {
     let woodGathered = 0;
@@ -267,6 +268,9 @@ window.Game.gatherWood = function () {
     let boostMultiplier = 2;
     let minWoodWithoutMultiplier = 1;
     let maxWoodWithoutMultiplier = 5;
+    let hungerCost = 10;
+    let thirstCost = 10;
+    let sleepCost = 5;
 
     if (window.Game.itemAvailable(boostItem)) {
         woodGathered = window.Game.randomInt(minWoodWithoutMultiplier * boostMultiplier, maxWoodWithoutMultiplier * boostMultiplier);
@@ -281,9 +285,13 @@ window.Game.gatherWood = function () {
     window.Game.player.resources.wood += woodGathered;
     window.Game.player.resources.sticks += sticksGathered;
     window.Game.player.resources.bunchOfLeaves += bunchesOfLeavesGathered;
+    window.Game.player.stats.find(obj => {return obj.name === "Hunger"}).value -= hungerCost;
+    window.Game.player.stats.find(obj => {return obj.name === "Thirst"}).value -= thirstCost;
+    window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
     window.Game.updateResources();
     window.Game.logEvent("You manage to gather " + woodGathered + " wood, " + sticksGathered + " sticks and " + bunchesOfLeavesGathered + " bunch of leaves.");
 };
+
 
 /**
  * Run the game!
