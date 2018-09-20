@@ -32,6 +32,9 @@ window.Game.player.resources.sticks = 0;
 window.Game.player.resources.berries = 0;
 window.Game.player.resources.mushrooms = 0;
 window.Game.player.resources.apples = 0;
+window.Game.player.resources.skin = 0;
+window.Game.player.resources.fur = 0;
+window.Game.player.resources.meat = 0;
 window.Game.player.stats = [
     {
         'name': 'Hunger',
@@ -317,7 +320,27 @@ window.Game.forage = function () {
 
     window.Game.updateResources();
     window.Game.logEvent("You manage to forage " + berriesGathered + " berries, " + applesGathered + " apples and " + mushroomsGathered + " mushrooms.");
+};
 
+window.Game.hunt = function(){
+    let hungerCost, sleepCost, thirstCost = 5;
+    let meatGathered = 0;
+    let skinGathered = 0;
+    let furGathered = 0;
+
+    meatGathered = window.Game.randomInt(1, 3);
+    skinGathered = window.Game.randomInt(0, 2);
+    furGathered = window.Game.randomInt(1, 6);
+
+    window.Game.player.resources.meat += meatGathered;
+    window.Game.player.resources.skin += skinGathered;
+    window.Game.player.resources.fur += furGathered;
+
+    window.Game.player.stats.find(obj => {return obj.name === "Hunger"}).value -= hungerCost;
+    window.Game.player.stats.find(obj => {return obj.name === "Thirst"}).value -= thirstCost;
+    window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
+
+    window.Game.logEvent("You manage to get " + meatGathered + " meat, " + furGathered + " fur and " + skinGathered + " skins");
 };
 
 /**
