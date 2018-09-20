@@ -29,6 +29,9 @@ window.Game.player.resources = {};
 window.Game.player.resources.wood = 0;
 window.Game.player.resources.bunchOfLeaves = 0;
 window.Game.player.resources.sticks = 0;
+window.Game.player.resources.berries = 0;
+window.Game.player.resources.mushrooms = 0;
+window.Game.player.resources.apples = 0;
 window.Game.player.stats = [
     {
         'name': 'Hunger',
@@ -292,6 +295,30 @@ window.Game.gatherWood = function () {
     window.Game.logEvent("You manage to gather " + woodGathered + " wood, " + sticksGathered + " sticks and " + bunchesOfLeavesGathered + " bunch of leaves.");
 };
 
+window.Game.forage = function () {
+    let hungerCost = 3;
+    let sleepCost = 5;
+    let thirstCost = 3;
+    let applesGathered = 0;
+    let mushroomsGathered = 0;
+    let berriesGathered = 0;
+
+    applesGathered = window.Game.randomInt(1, 10);
+    mushroomsGathered = window.Game.randomInt(1, 10);
+    berriesGathered = window.Game.randomInt(5, 10);
+
+    window.Game.player.resources.apples += applesGathered;
+    window.Game.player.resources.mushrooms += mushroomsGathered;
+    window.Game.player.resources.berries += berriesGathered;
+
+    window.Game.player.stats.find(obj => {return obj.name === "Hunger"}).value -= hungerCost;
+    window.Game.player.stats.find(obj => {return obj.name === "Thirst"}).value -= thirstCost;
+    window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
+
+    window.Game.updateResources();
+    window.Game.logEvent("You manage to forage " + berriesGathered + " berries, " + applesGathered + " apples and " + mushroomsGathered + " mushrooms.");
+
+};
 
 /**
  * Run the game!
