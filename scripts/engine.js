@@ -51,6 +51,8 @@ window.Game.player.stats = [
 ];
 window.Game.decaySpeed = 5; // stats decay by 1 each {value} ticks
 window.Game.lastTickStatDecay = 0;
+window.Game.lastStoryEventId = 0;
+window.Game.disallowEvents = false;
 
 /**
  * Main game loop. This is where the game starts
@@ -65,7 +67,8 @@ window.Game.MainLoop = function () {
 window.Game.Update = function () {
     if (window.Game.running) {
         window.Game.updateTickCounter();
-        window.Game.eventCheck();
+        window.Game.storyEventTrigger();
+        window.Game.worldEventTrigger();
         window.Game.updateResources();
         window.Game.updateStats();
         window.Game.updateInventory();
@@ -112,21 +115,40 @@ window.Game.randomInt = function (min, max, exclude) {
  * Checks for and triggers an available event.
  * Only one event can be triggered per tick.
  */
-window.Game.eventCheck = function () {
+window.Game.worldEventTrigger = function () {
+    if (window.Game.disallowEvents){
+        return;
+    }
     let excludedIds = [];
     excludedIds.push(0, window.Game.lastEventId);
 
-    for (let i = 0; i < window.Game.Events.length; i++) {
-        let rand = window.Game.randomInt(1, window.Game.Events.length, excludedIds);
-        let event = window.Game.Events.filter(obj => {
-            if (obj.id === rand) {
-                return obj;
-            }
-        });
-        if (event[0] !== 0 && event[0].isAvailable()) {
-            event[0].trigger();
-            break;
-        }
+    let rand = window.Game.randomInt(1, window.Game.WorldEvents.length, excludedIds);
+    let event = window.Game.WorldEvents.find(obj => {
+        return obj.id === rand && obj.isAvailable();
+    });
+
+    if (event !== undefined) {
+        window.Game.disallowEvents = true;
+        event.trigger();
+        window.Game.lastEventId = event.id;
+        window.Game.disallowEvents = false;
+    }
+};
+
+
+window.Game.storyEventTrigger = function () {
+    if (window.Game.disallowEvents){
+        return;
+    }
+
+    let event = window.Game.StoryEvents.find(obj => {
+        return obj.id === window.Game.lastStoryEventId + 1 && obj.isAvailable();
+    });
+    if (event !== undefined) {
+        window.Game.disallowEvents = true;
+        event.trigger();
+        window.Game.lastStoryEventId = event.id;
+        window.Game.disallowEvents = false;
     }
 };
 
@@ -196,7 +218,7 @@ window.Game.updateStats = function () {
         return stat.name === 'Sleep'
     }).value;
 
-    if (playerHunger> 80) {
+    if (playerHunger > 80) {
         hungerBar.innerHTML = '[+++++]';
     } else if (playerHunger > 60) {
         hungerBar.innerHTML = '[++++-]';
@@ -210,7 +232,7 @@ window.Game.updateStats = function () {
         hungerBar.innerHTML = '[-----]';
     }
 
-    if (playerThirst> 80) {
+    if (playerThirst > 80) {
         thirstBar.innerHTML = '[+++++]';
     } else if (playerThirst > 60) {
         thirstBar.innerHTML = '[++++-]';
@@ -224,7 +246,7 @@ window.Game.updateStats = function () {
         thirstBar.innerHTML = '[-----]';
     }
 
-    if (playerSleep> 80) {
+    if (playerSleep > 80) {
         sleepBar.innerHTML = '[+++++]';
     } else if (playerSleep > 60) {
         sleepBar.innerHTML = '[++++-]';
@@ -291,9 +313,15 @@ window.Game.gatherWood = function () {
     window.Game.player.resources.wood += woodGathered;
     window.Game.player.resources.sticks += sticksGathered;
     window.Game.player.resources.bunchOfLeaves += bunchesOfLeavesGathered;
-    window.Game.player.stats.find(obj => {return obj.name === "Hunger"}).value -= hungerCost;
-    window.Game.player.stats.find(obj => {return obj.name === "Thirst"}).value -= thirstCost;
-    window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Hunger"
+    }).value -= hungerCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Thirst"
+    }).value -= thirstCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Sleep"
+    }).value -= sleepCost;
 
     window.Game.updateResources();
     window.Game.updateStats();
@@ -316,16 +344,22 @@ window.Game.forage = function () {
     window.Game.player.resources.mushrooms += mushroomsGathered;
     window.Game.player.resources.berries += berriesGathered;
 
-    window.Game.player.stats.find(obj => {return obj.name === "Hunger"}).value -= hungerCost;
-    window.Game.player.stats.find(obj => {return obj.name === "Thirst"}).value -= thirstCost;
-    window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Hunger"
+    }).value -= hungerCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Thirst"
+    }).value -= thirstCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Sleep"
+    }).value -= sleepCost;
 
     window.Game.updateResources();
     window.Game.updateStats();
     window.Game.logEvent("You manage to forage " + berriesGathered + " berries, " + applesGathered + " apples and " + mushroomsGathered + " mushrooms.");
 };
 
-window.Game.hunt = function(){
+window.Game.hunt = function () {
     let hungerCost = 5;
     let sleepCost = 5;
     let thirstCost = 5;
@@ -341,9 +375,15 @@ window.Game.hunt = function(){
     window.Game.player.resources.skin += skinGathered;
     window.Game.player.resources.fur += furGathered;
 
-    window.Game.player.stats.find(obj => {return obj.name === "Hunger"}).value -= hungerCost;
-    window.Game.player.stats.find(obj => {return obj.name === "Thirst"}).value -= thirstCost;
-    window.Game.player.stats.find(obj => {return obj.name === "Sleep"}).value -= sleepCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Hunger"
+    }).value -= hungerCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Thirst"
+    }).value -= thirstCost;
+    window.Game.player.stats.find(obj => {
+        return obj.name === "Sleep"
+    }).value -= sleepCost;
 
     window.Game.updateResources();
     window.Game.updateStats();

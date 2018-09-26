@@ -10,8 +10,6 @@
 </head>
 
 <body>
-
-
 <!-- game -->
 <div id="gameContainer">
     <div id="logContainer">
@@ -25,9 +23,15 @@
     </div>
 
     <div id="statsContainer">
-        <div>H<div id="hunger"></div></div>
-        <div>T<div id="thirst"></div></div>
-        <div>S<div id="sleep"></div></div>
+        <div>H
+            <div id="hunger"></div>
+        </div>
+        <div>T
+            <div id="thirst"></div>
+        </div>
+        <div>S
+            <div id="sleep"></div>
+        </div>
     </div>
 
     <!-- debug area -->
@@ -42,7 +46,6 @@
                 <div>wood</div>
                 <div id="wood"></div>
             </div>
-
         </div>
 
         <div id="inventoryContainer">
@@ -50,11 +53,11 @@
             <div id="inventory"></div>
         </div>
     </div>
+</div>
 
-
-    <script src=".\script\engine.js"></script>
-    <script src=".\script\events.js"></script>
-
+<script src=".\scripts\engine.js"></script>
+<script src=".\scripts\worldEvents.js"></script>
+<script src=".\scripts\storyEvents.js"></script>
 </body>
 
 </html>
