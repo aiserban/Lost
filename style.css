@@ -41,3 +41,7 @@ body, textarea, p, div, button {
     display: flex;
     padding-left: 5px;
 }
+
+#buildMenu {
+    visibility: collapse;
+}

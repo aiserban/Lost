@@ -10,24 +10,24 @@ window.Game.inventoryChanged = true;
 window.Game.player = {};
 window.Game.player.inventory = [
     {
-        "name": "Hatchet",
-        "isAvailable": true,
-        "description": "Just a plain old hatchet"
+        name: "Hatchet",
+        isAvailable: true,
+        description: "Just a plain old hatchet"
     },
     {
-        "name": "Canteen",
-        "isAvailable": false,
-        "description": "Used for storing water. Capacity: 2 liters"
+        name: "Canteen",
+        isAvailable: false,
+        description: "Used for storing water. Capacity: 2 liters"
     },
     {
-        "name": "Hunting knife",
-        "isAvailable": true,
-        "description": "Your trusty knife. Great at skinning and cutting everything wildlife"
+        name: "Hunting knife",
+        isAvailable: true,
+        description: "Your trusty knife. Great at skinning and cutting everything wildlife"
     }
 ];
 window.Game.player.resources = {};
 window.Game.player.resources.wood = 0;
-window.Game.player.resources.bunchOfLeaves = 0;
+window.Game.player.resources.leaves = 0;
 window.Game.player.resources.sticks = 0;
 window.Game.player.resources.berries = 0;
 window.Game.player.resources.mushrooms = 0;
@@ -53,6 +53,21 @@ window.Game.decaySpeed = 5; // stats decay by 1 each {value} ticks
 window.Game.lastTickStatDecay = 0;
 window.Game.lastStoryEventId = 0;
 window.Game.disallowEvents = false;
+window.Game.buildings = [
+    {
+        name: 'Shelter',
+        requirements: {
+            sticks: 5,
+            leaves: 10
+        },
+        isAvailable: function(){
+            return (this.requirements.sticks < window.Game.player.resources.sticks &&
+                    this.requirements.leaves < window.Game.player.resources.leaves);
+        }
+    }
+];
+window.Game.buildMenuDisplayed = false;
+window.Game.actionMenuDisplayed = true;
 
 /**
  * Main game loop. This is where the game starts
@@ -291,7 +306,7 @@ window.Game.logEvent = function (message) {
 window.Game.gatherWood = function () {
     let woodGathered = 0;
     let sticksGathered = 0;
-    let bunchesOfLeavesGathered = 0;
+    let leavesGathered = 0;
     let boostItem = "Hatchet";
     let boostMultiplier = 2;
     let minWoodWithoutMultiplier = 1;
@@ -308,11 +323,11 @@ window.Game.gatherWood = function () {
     }
 
     sticksGathered = window.Game.randomInt(5, 15);
-    bunchesOfLeavesGathered = window.Game.randomInt(1, 2);
+    leavesGathered = window.Game.randomInt(1, 2);
 
     window.Game.player.resources.wood += woodGathered;
     window.Game.player.resources.sticks += sticksGathered;
-    window.Game.player.resources.bunchOfLeaves += bunchesOfLeavesGathered;
+    window.Game.player.resources.leaves += leavesGathered;
     window.Game.player.stats.find(obj => {
         return obj.name === "Hunger"
     }).value -= hungerCost;
@@ -325,7 +340,7 @@ window.Game.gatherWood = function () {
 
     window.Game.updateResources();
     window.Game.updateStats();
-    window.Game.logEvent("You manage to gather " + woodGathered + " wood, " + sticksGathered + " sticks and " + bunchesOfLeavesGathered + " bunch of leaves.");
+    window.Game.logEvent("You manage to gather " + woodGathered + " wood, " + sticksGathered + " sticks and " + leavesGathered + " bunch of leaves.");
 };
 
 window.Game.forage = function () {
@@ -388,6 +403,34 @@ window.Game.hunt = function () {
     window.Game.updateResources();
     window.Game.updateStats();
     window.Game.logEvent("You manage to get " + meatGathered + " meat, " + furGathered + " fur and " + skinGathered + " skins");
+};
+
+window.Game.showBuildMenu = function(){
+    document.getElementById('actionMenu').setAttribute('style', 'visibility: collapse');
+    document.getElementById('buildMenu').setAttribute('style', 'visibility: visible');
+    window.Game.buildMenuDisplayed = true;
+    window.Game.actionMenuDisplayed = false;
+};
+
+window.Game.back = function(){
+    if (window.Game.buildMenuDisplayed){
+        document.getElementById('buildMenu').setAttribute('style', 'visibility: collapse');
+        document.getElementById('actionMenu').setAttribute('style', 'visibility: visible');
+        window.Game.buildMenuDisplayed = false;
+        window.Game.actionMenuDisplayed = true;
+    }
+};
+
+window.Game.buildShelter = function(){
+    let shelter = window.Game.buildings.find(building => function(){ return building.name === 'Shelter'});
+    if (shelter.isAvailable()) {
+        window.Game.player.resources.stick -= shelter.requirements.sticks;
+        window.Game.player.resources.leaves -= shelter.requirements.leaves;
+        window.Game.updateResources();
+        window.Game.logEvent('You wrap a bunch of stick and leaves together. It isn\'t much, but it will have to do for now');
+    } else {
+        window.Game.logEvent('There aren\'t enough resources to build a shelter');
+    }
 };
 
 /**

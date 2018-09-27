@@ -16,10 +16,16 @@
         <textarea id="log" disabled="disabled"></textarea>
     </div>
 
-    <div id="actionButtons">
+    <div id="actionMenu">
         <button id="gatherWood" class="button" onclick="window.Game.gatherWood()">Gather wood</button>
         <button id="forage" class="button" onclick="window.Game.forage()">Forage</button>
         <button id="hunt" class="button" onclick="window.Game.hunt()">Hunt</button>
+        <button id="build" class="button" onclick="window.Game.showBuildMenu()">Buildings</button>
+    </div>
+
+    <div id="buildMenu">
+        <button id="backButton" class="button" onclick="window.Game.back()">Back</button>
+        <button id="shelter" class="button" onclick="window.Game.buildShelter()">Shelter</button>
     </div>
 
     <div id="statsContainer">
