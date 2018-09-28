@@ -77,7 +77,7 @@ Game.buildings = [
 Game.buildMenuDisplayed = false;
 Game.actionMenuDisplayed = true;
 Game.currentSeason = 'Spring';
-Game.seasonChangeTicks = 100;
+Game.seasonChangeTicks = 600;
 
 /**
  * Main game loop. This is where the game starts
@@ -92,7 +92,9 @@ Game.MainLoop = function () {
 Game.Update = function () {
     if (Game.running) {
         Game.updateTickCounter();
-        setInterval(Game.changeSeason, Game.seasonChangeTicks * Game.tickSpeed);
+        if (Game.currentTick % Game.seasonChangeTicks === 0){
+            Game.changeSeason();
+        }
         Game.storyEventTrigger();
         Game.worldEventTrigger();
         Game.updateResources();
