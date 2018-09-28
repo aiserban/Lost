@@ -33,20 +33,28 @@ window.Game.player.resources.berries = 0;
 window.Game.player.resources.mushrooms = 0;
 window.Game.player.resources.apples = 0;
 window.Game.player.resources.skin = 0;
-window.Game.player.resources.fur = 0;
+window.Game.player.resources.fur = 0
 window.Game.player.resources.meat = 0;
 window.Game.player.stats = [
     {
-        'name': 'Hunger',
-        'value': 100
+        name: 'Hunger',
+        value: 100
     },
     {
-        'name': 'Thirst',
-        'value': 100
+        name: 'Thirst',
+        value: 100
     },
     {
-        'name': 'Sleep',
-        'value': 100
+        name: 'Sleep',
+        value: 100
+    },
+    {
+        name: 'Comfort',
+        value: 100
+    },
+    {
+        name: 'Health',
+        value: 100
     }
 ];
 window.Game.decaySpeed = 5; // stats decay by 1 each {value} ticks
@@ -150,7 +158,9 @@ window.Game.worldEventTrigger = function () {
     }
 };
 
-
+/**
+ * Triggers a story related event if one is available
+ */
 window.Game.storyEventTrigger = function () {
     if (window.Game.disallowEvents){
         return;
@@ -166,7 +176,6 @@ window.Game.storyEventTrigger = function () {
         window.Game.disallowEvents = false;
     }
 };
-
 
 /**
  * Increases the game counter and displays the value in the UI
@@ -222,6 +231,8 @@ window.Game.updateStats = function () {
     let hungerBar = document.getElementById('hunger');
     let thirstBar = document.getElementById('thirst');
     let sleepBar = document.getElementById('sleep');
+    let comfortBar = document.getElementById('comfort');
+    // Health bar is not displayed
 
     let playerHunger = window.Game.player.stats.find(stat => {
         return stat.name === 'Hunger'
@@ -231,6 +242,9 @@ window.Game.updateStats = function () {
     }).value;
     let playerSleep = window.Game.player.stats.find(stat => {
         return stat.name === 'Sleep'
+    }).value;
+    let playerComfort = window.Game.player.stats.find(stat => {
+        return stat.name === 'Comfort'
     }).value;
 
     if (playerHunger > 80) {
@@ -274,10 +288,24 @@ window.Game.updateStats = function () {
     } else {
         sleepBar.innerHTML = '[-----]';
     }
+
+    if (playerComfort > 80) {
+        comfortBar.innerHTML = '[+++++]';
+    } else if (playerComfort > 60) {
+        comfortBar.innerHTML = '[++++-]';
+    } else if (playerComfort > 40) {
+        comfortBar.innerHTML = '[+++--]';
+    } else if (playerComfort > 20) {
+        comfortBar.innerHTML = '[++---]';
+    } else if (playerComfort > 0) {
+        comfortBar.innerHTML = '[+----]';
+    } else {
+        comfortBar.innerHTML = '[-----]';
+    }
 };
 
 /**
- * Checks if the player has the item with that name in the inventory
+ * Checks if the player has the item with the provided name in the inventory
  * @param name
  * @returns {boolean}
  */
@@ -343,6 +371,9 @@ window.Game.gatherWood = function () {
     window.Game.logEvent("You manage to gather " + woodGathered + " wood, " + sticksGathered + " sticks and " + leavesGathered + " bunch of leaves.");
 };
 
+/**
+ * Forage for fruit, vegetables and other small gains
+ */
 window.Game.forage = function () {
     let hungerCost = 3;
     let sleepCost = 5;
@@ -374,6 +405,9 @@ window.Game.forage = function () {
     window.Game.logEvent("You manage to forage " + berriesGathered + " berries, " + applesGathered + " apples and " + mushroomsGathered + " mushrooms.");
 };
 
+/**
+ * Hunt to obtain meat, fur, skin and other goodies from animal sources
+ */
 window.Game.hunt = function () {
     let hungerCost = 5;
     let sleepCost = 5;
@@ -405,6 +439,9 @@ window.Game.hunt = function () {
     window.Game.logEvent("You manage to get " + meatGathered + " meat, " + furGathered + " fur and " + skinGathered + " skins");
 };
 
+/**
+ * Display the build menu
+ */
 window.Game.showBuildMenu = function(){
     document.getElementById('actionMenu').setAttribute('style', 'visibility: collapse');
     document.getElementById('buildMenu').setAttribute('style', 'visibility: visible');
@@ -412,6 +449,9 @@ window.Game.showBuildMenu = function(){
     window.Game.actionMenuDisplayed = false;
 };
 
+/**
+ * Back button switches the current view in the UI to the previous one
+ */
 window.Game.back = function(){
     if (window.Game.buildMenuDisplayed){
         document.getElementById('buildMenu').setAttribute('style', 'visibility: collapse');
@@ -421,6 +461,10 @@ window.Game.back = function(){
     }
 };
 
+/**
+ * Build a shelter to protect from weather effects
+ * Having a home also gives a boost for comfort
+ */
 window.Game.buildShelter = function(){
     let shelter = window.Game.buildings.find(building => function(){ return building.name === 'Shelter'});
     if (shelter.isAvailable()) {
