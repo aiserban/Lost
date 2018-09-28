@@ -1,4 +1,4 @@
-window.Game.StoryEvents = [
+Game.StoryEvents = [
     {
         id: 1,
         title: 'intro',

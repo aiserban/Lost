@@ -1,4 +1,4 @@
-window.Game.WorldEvents = [
+Game.WorldEvents = [
     {
         id: 1,
         title: "The Stranger",

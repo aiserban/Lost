@@ -18,15 +18,15 @@
     </div>
 
     <div id="actionMenu">
-        <button id="gatherWood" class="button" onclick="window.Game.gatherWood()">Gather wood</button>
-        <button id="forage" class="button" onclick="window.Game.forage()">Forage</button>
-        <button id="hunt" class="button" onclick="window.Game.hunt()">Hunt</button>
-        <button id="build" class="button" onclick="window.Game.showBuildMenu()">Buildings</button>
+        <button id="gatherWood" class="button" onclick="Game.gatherWood()">Gather wood</button>
+        <button id="forage" class="button" onclick="Game.forage()">Forage</button>
+        <button id="hunt" class="button" onclick="Game.hunt()">Hunt</button>
+        <button id="build" class="button" onclick="Game.showBuildMenu()">Buildings</button>
     </div>
 
     <div id="buildMenu">
-        <button id="backButton" class="button" onclick="window.Game.back()">Back</button>
-        <button id="shelter" class="button" onclick="window.Game.buildShelter()">Shelter</button>
+        <button id="backButton" class="button" onclick="Game.back()">Back</button>
+        <button id="shelter" class="button" onclick="Game.buildShelter()">Shelter</button>
     </div>
 
     <div id="statsContainer">
@@ -52,7 +52,7 @@
     <div id="debugContainer">
         <div>Tick:</div>
         <div id="tickCounter">0</div>
-        <button onclick="window.Game.pause()">Pause</button>
+        <button onclick="Game.pause()">Pause</button>
 
         <div id="resourceContainer">
             <div>Resources</div>
