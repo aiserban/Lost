@@ -23,7 +23,7 @@ Game.WorldEvents = [
         id: 3,
         title: "Forest sounds",
         isAvailable: function(){
-            return (window.Game.currentTick % 25 === 0) && window.Game.lastEventId !== this.id;
+            return (window.Game.currentTick % 50 === 0) && window.Game.lastEventId !== this.id;
         },
         trigger: function(){
             window.Game.logEvent("The trees move");

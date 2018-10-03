@@ -83,6 +83,7 @@ Game.seasonChangeTicks = 600;
  * Main game loop. This is where the game starts
  */
 Game.MainLoop = function () {
+    Game.addTooltips();
     setInterval(Game.Update, Game.tickSpeed);
 };
 
@@ -499,6 +500,12 @@ Game.buildShelter = function(){
     } else {
         Game.logEvent('There aren\'t enough resources to build a shelter');
     }
+};
+
+Game.addTooltips = function(){
+    let shelter = Game.buildings.find(building => function(){ return building.name === 'Shelter'});
+    document.getElementById("shelter").setAttribute(
+        "title", "Requires " + shelter.requirements.sticks + " sticks and " + shelter.requirements.leaves + " leaves");
 };
 
 /**
