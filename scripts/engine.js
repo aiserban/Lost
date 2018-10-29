@@ -70,7 +70,11 @@ Game.buildings = [
         },
         isAvailable: function(){
             return (this.requirements.sticks < Game.player.resources.sticks &&
-                    this.requirements.leaves < Game.player.resources.leaves);
+                    this.requirements.leaves < Game.player.resources.leaves &&
+                    !this.isConstructed());
+        },
+        isConstructed: function () {
+            return Game.constructedBuildings.includes("Shelter");
         }
     }
 ];
@@ -78,6 +82,7 @@ Game.buildMenuDisplayed = false;
 Game.actionMenuDisplayed = true;
 Game.currentSeason = 'Spring';
 Game.seasonChangeTicks = 600;
+Game.constructedBuildings = [];
 
 /**
  * Main game loop. This is where the game starts
@@ -224,6 +229,12 @@ Game.decayStats = function () {
     if (Game.currentTick === (Game.lastTickStatDecay + Game.decaySpeed)) {
         for (let i = 0; i < Game.player.stats.length; i++) {
             Game.player.stats[i].value -= 1;
+
+            if (Game.player.stats[i].name === "Comfort") {
+                if (Game.constructedBuildings.includes("Shelter") && Game.player.stats[i].value <= 20) {
+                    Game.player.stats[i].value = 20;
+                }
+            }
         }
         Game.lastTickStatDecay = Game.currentTick;
         Game.updateStats();
@@ -495,8 +506,11 @@ Game.buildShelter = function(){
     if (shelter.isAvailable()) {
         Game.player.resources.stick -= shelter.requirements.sticks;
         Game.player.resources.leaves -= shelter.requirements.leaves;
+        Game.constructedBuildings.push("Shelter");
         Game.updateResources();
         Game.logEvent('You wrap a bunch of stick and leaves together. It isn\'t much, but it will have to do for now');
+    } else if (shelter.isConstructed()){
+        Game.logEvent("Another shelter won't do you much good");
     } else {
         Game.logEvent('There aren\'t enough resources to build a shelter');
     }
