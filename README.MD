@@ -1,6 +1,10 @@
 ### So... What is it?
 
-You may know a browser game called [A Dark Room](https://adarkroom.doublespeakgames.com/). Well, I wanted to see how I would approach development of a similar title. And maybe learn to love Javascript while at it. I had a vague idea of what I wanted from it, enough to code the basics in a rough form:
+You may know a browser game called [A Dark Room](https://adarkroom.doublespeakgames.com/). Well, I wanted to see how I would approach development of a similar title. And maybe learn to love Javascript while at it. I had a vague idea of what I wanted from it, enough to code the basic building blocks.
+
+You can "play" with it [here](https://aiserban.github.io/Lost/) (kindly hosted by GitHub Pages).
+
+Features (in a rough form):
 
 - Stats (Thirst, Hunger etc)
 
