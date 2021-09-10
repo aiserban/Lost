@@ -23,4 +23,4 @@ Features (in a rough form):
 Being a text-based game, focus is on the events that drive the story. But without having an actual script to drive the story forward I stopped working on the project. I think 70% of the time spent developing this game from now on would be writing text, rather than adding gameplay mechanics.
 
 ### Screenshot
-<img src="docs/lost.png" width="1000px" alt="screenshot">
+<img src="docs/lostscreenshot.png" width="1000px" alt="screenshot">
